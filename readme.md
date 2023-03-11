@@ -16,3 +16,6 @@ https://docs.google.com/presentation/d/1_0lJ2C24vifyGEIB6rJ-H_xBr39kU_vkdGmcVs-y
 
 Week 7 Report/Final proposal:
 https://docs.google.com/presentation/d/1aOYvcM9sXJzed4eAdXP3i8JWBK2wQyqOzarppActuEA/edit?pli=1#slide=id.g21235c46a71_1_273
+
+Week 9: Project Proposal google doc:
+https://docs.google.com/document/d/1_KsRKQmV4_ZtibufrCC6zuzVwpRGNp2Zb--JQo9HggU/edit#
