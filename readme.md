@@ -19,3 +19,12 @@ https://docs.google.com/presentation/d/1aOYvcM9sXJzed4eAdXP3i8JWBK2wQyqOzarppAct
 
 Week 9: Project Proposal google doc:
 https://docs.google.com/document/d/1_KsRKQmV4_ZtibufrCC6zuzVwpRGNp2Zb--JQo9HggU/edit#
+
+
+## Conda environment
+ ```
+ conda create -n crux
+ conda activate crux
+ conda install python=3.8 -y
+ pip install -r requirements.txt
+ ```
