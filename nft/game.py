@@ -6,7 +6,7 @@ import numpy as np
 HEIGHT = 450
 WIDTH = 400
 ACC = 0.05
-
+VOLUME = 0.5
 # k = -(k/m)
 FRIC = -0.03
 FPS = 60
@@ -95,6 +95,12 @@ all_sprites.add(P1)
  
 displaysurface.fill((228, 217, 255))
 
+pygame.mixer.music.load("cruxgamemusic.mp3")
+pygame.mixer.music.play()
+#print(pygame.mixer.music.get_volume())
+pygame.mixer.music.set_volume(VOLUME)
+print(pygame.mixer.music.get_volume())
+
 x_pos = WIDTH/2 - 10
 while True:
     for event in pygame.event.get():
@@ -121,6 +127,10 @@ while True:
 
     ACC = RATIO * 0.2
 
+    #adjust vol from acceleration
+    
+    VOLUME = ACC * 4 + 0.1
+    pygame.mixer.music.set_volume(VOLUME)
     PT1.move()
     for entity in all_sprites:
         displaysurface.blit(entity.surf, entity.rect)
