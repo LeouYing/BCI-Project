@@ -63,6 +63,7 @@ def sender(connection):
 
         # If we have at least SLICE number of data points
         if len(data) > SLICE:
+            # print('Sending')
             # Circular buffer
             data = data[-SLICE:]
 
@@ -104,7 +105,7 @@ def sender(connection):
             ys = np.array(ys)
             theta_power = np.abs(np.mean(ys.flatten()))
             file.write(f'{theta_power},')
-            # connection.send(theta_power)
+            connection.send(theta_power)
     # # generate work
     # for i in range(3):
     #     # generate a value
@@ -116,7 +117,16 @@ def sender(connection):
     # # all done
     # connection.send(None)
     # print('Sender: Done', flush=True)
- 
+
+def logistic(x):
+    L = 0.7
+    k = 10
+    a = 0.45
+    if x > L:
+        x = L
+    
+    return L/(1+np.e**(-k*(x-0.45)))
+
 # consume work
 def receiver(connection):
     HEIGHT = 450
@@ -249,6 +259,11 @@ def receiver(connection):
         # ACC = RATIO * 0.2
         if connection.poll():
             ACC = connection.recv()/50
+            ACC -= 0.2
+            if ACC < 0:
+                ACC = 0
+            ACC = logistic(ACC)
+            
             print(ACC)
 
         PT1.move()
