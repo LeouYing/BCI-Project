@@ -2,15 +2,8 @@ import pygame, sys
 from pygame.math import Vector2
 from pygame.locals import K_LEFT, K_RIGHT, QUIT
 import numpy as np
-<<<<<<< HEAD
 from multiprocessing import Queue
 from pygame import mixer
-=======
- 
-HEIGHT = 600
-WIDTH = 600
-FPS = 60
->>>>>>> f08c2b8 (Comments)
 
 SCREEN_WIDTH = 400
 SCREEN_HEIGHT = 450
@@ -18,7 +11,7 @@ ACC = 0.05
 GAMEVOL = 0.4
 # k = -(k/m)
 FRIC = -0.03
-ACC = 0.05
+FPS = 60
 
 BG_FILE_NAME = "mars.jpg"
 MUSIC_NAME = "cruxgamemusic.mp3"
@@ -37,7 +30,7 @@ class Player(pygame.sprite.Sprite):
         self.vel = Vector2(0, 0)
         self.acc = Vector2(0, 0)
  
-class Checkered(pygame.sprite.Sprite):
+class Platform(pygame.sprite.Sprite):
     def __init__(self, width, height, spacing):
         super().__init__()
         # self.surf = pygame.Surface((WIDTH, 20))
@@ -92,31 +85,20 @@ class Checkered(pygame.sprite.Sprite):
             self.pos.x -= 2*self.spacing
         
         self.construct_grid()
-<<<<<<< HEAD
     
  
 pygame.init()
 FramePerSec = pygame.time.Clock()
 displaysurface = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Game")
-=======
 
+PT1 = Platform(displaysurface.get_size()[0], 60, 60)
+P1 = Player()
 
-pygame.init()
-game_time = pygame.time.Clock()
-window = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Training")
->>>>>>> f08c2b8 (Comments)
-
-CheckeredRoad = Checkered(window.get_size()[0], int(HEIGHT/10), int(HEIGHT/10))
-MainPlayer = Player()
-
-# Add sprites for future rendering
 all_sprites = pygame.sprite.Group()
-all_sprites.add(CheckeredRoad)
-all_sprites.add(MainPlayer)
+all_sprites.add(PT1)
+all_sprites.add(P1)
  
-<<<<<<< HEAD
 #displaysurface.fill((228, 217, 255))
 displaysurface.fill((0, 0, 0)) #transparent/black bg
 
@@ -135,80 +117,34 @@ bg_x = 0
 #bg = pygame.transform.scale(bg, (736 * 1.15, 345 * 1.15))
 
 
-=======
-# Background
-window.fill((228, 217, 255))
-
-# Slider x position
-x_pos = WIDTH/2 - 10
-
-mouse_pressed = False
-
->>>>>>> f08c2b8 (Comments)
 while True:
-    # Handle exit
     for event in pygame.event.get():
         if event.type == QUIT:
             pygame.quit()
             sys.exit()
-
-    pygame.draw.rect(window, pygame.Color(255, 0, 0), pygame.Rect(0, 0, WIDTH, 50))
-    pygame.draw.rect(window, pygame.Color(0, 255, 0), pygame.Rect(x_pos, 0, 20, 50))
-
-    # Handle click slider
+    
     button = pygame.mouse.get_pressed()
-<<<<<<< HEAD
     pygame.draw.rect(displaysurface, pygame.Color(255, 0, 0), pygame.Rect(0, 0, SCREEN_WIDTH, 50))
     pygame.draw.rect(displaysurface, pygame.Color(0, 255, 0), pygame.Rect(x_pos, 0, 20, 50))
     if button[0] != 0:
         x, y = pygame.mouse.get_pos()
         if y < 50:
             pygame.draw.rect(displaysurface, pygame.Color(255, 0, 0), pygame.Rect(0, 0, SCREEN_WIDTH, 50))
-=======
-    if button[0]:
-        x, y = pygame.mouse.get_pos()
-
-        # If clicked on slider or slider held
-        if y < 50 or mouse_pressed == True:
-            mouse_pressed = True
-
-            # Draw slider background
-            slider_bg_color = pygame.Color(255, 0, 0)
-            slider_bg_rect = pygame.Rect(0, 0, WIDTH, 50)
-            pygame.draw.rect(window, slider_bg_color, slider_bg_rect)
-
-            # Handle pixel overflow
->>>>>>> f08c2b8 (Comments)
             if x < 10:
                 x_pos = 0
             elif x > SCREEN_WIDTH - 10:
                 x_pos = SCREEN_WIDTH - 20
             else:
                 x_pos = x - 10
-<<<<<<< HEAD
             pygame.draw.rect(displaysurface, pygame.Color(0, 255, 0), pygame.Rect(x_pos, 0, 20, 50))
  
     RATIO = x_pos / (SCREEN_WIDTH - 20)
-=======
->>>>>>> f08c2b8 (Comments)
 
-            # Draw slider handle
-            slider_handle_color = pygame.Color(0, 255, 0) # Green
-            slider_handle_rect = pygame.Rect(x_pos, 0, 20, 50)
-            pygame.draw.rect(window, slider_handle_color, slider_handle_rect)
-
-    # Reset slider hold when mouse is released
-    else:
-        mouse_pressed = False
- 
-    # Calculate acceleration from slider
-    RATIO = x_pos / (WIDTH - 20)
     ACC = RATIO * 0.2
     
     GAMEVOL = ACC * 4 + 0.2
     mixer.music.set_volume(GAMEVOL)
 
-<<<<<<< HEAD
     PT1.move()
 
     #15 is arbitrary number to control bg scroll speed
@@ -239,14 +175,3 @@ while True:
     
     pygame.display.update()
     FramePerSec.tick(FPS)
-=======
-    # Handle moving road
-    CheckeredRoad.move()
-
-    # Render sprites with blit
-    for entity in all_sprites:
-        window.blit(entity.surf, entity.rect)
- 
-    pygame.display.update()
-    game_time.tick(FPS)
->>>>>>> f08c2b8 (Comments)
