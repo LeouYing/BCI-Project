@@ -13,9 +13,9 @@ GAMEVOL = 0.4
 FRIC = -0.03
 FPS = 60
 
-BG_FILE_NAME = "mars.jpg"
-MUSIC_NAME = "cruxgamemusic.mp3"
-CAR_IMAGE = "roller-coaster-car.png"
+BG_FILE_NAME = "CRUX-BCI-Project-2023/mars.jpg"
+MUSIC_NAME = "CRUX-BCI-Project-2023/cruxgamemusic.mp3"
+CAR_IMAGE = "CRUX-BCI-Project-2023/roller-coaster-car.png"
 
 class Player(pygame.sprite.Sprite):
     def __init__(self):
