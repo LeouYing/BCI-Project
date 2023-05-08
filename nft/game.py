@@ -5,17 +5,17 @@ import numpy as np
 from multiprocessing import Queue
 from pygame import mixer
 
-SCREEN_WIDTH = 400
-SCREEN_HEIGHT = 450
+SCREEN_WIDTH = 1200
+SCREEN_HEIGHT = 800
 ACC = 0.05
 GAMEVOL = 0.4
 # k = -(k/m)
 FRIC = -0.03
 FPS = 60
 
-BG_FILE_NAME = "CRUX-BCI-Project-2023/mars.jpg"
-MUSIC_NAME = "CRUX-BCI-Project-2023/cruxgamemusic.mp3"
-CAR_IMAGE = "CRUX-BCI-Project-2023/roller-coaster-car.png"
+BG_FILE_NAME = "test1_resize.jpg"
+MUSIC_NAME = "cruxgamemusic.mp3"
+CAR_IMAGE = "roller-coaster-car.png"
 
 class Player(pygame.sprite.Sprite):
     def __init__(self):
@@ -48,16 +48,31 @@ class Platform(pygame.sprite.Sprite):
 
     def construct_grid(self):
         # Construct checkered array
-        checkered_one_hot_array = np.fromfunction(lambda x, y: ( ((x+self.pos.x) // self.spacing) + (y // self.spacing)) % 2, (self.width, self.height))
+        #checkered_one_hot_array = np.fromfunction(lambda x, y: ( ((x+self.pos.x) // self.spacing) + (y // self.spacing)) % 2, (self.width, self.height))
 
         # Set low color
-        checkered_array = np.full((self.width, self.height, 3), (192, 174, 12))
+        #checkered_array = np.full((self.width, self.height, 3), (192, 174, 12))
         # Set high color
-        checkered_array[checkered_one_hot_array == 1] = (26, 38, 117)
-        self.surf = pygame.surfarray.make_surface(checkered_array)
+        #checkered_array[checkered_one_hot_array == 1] = (26, 38, 117)
+        #self.surf = pygame.surfarray.make_surface(checkered_array)
 
         # Create Rect object of Surface at bottom of screen
-        self.rect = self.surf.get_rect(center=(SCREEN_WIDTH/2, SCREEN_HEIGHT - (self.height / 2)))
+        #self.rect = self.surf.get_rect(center=(SCREEN_WIDTH/2, SCREEN_HEIGHT - (self.height / 2)))
+        
+        self.surf = pygame.Surface((SCREEN_WIDTH, 60))
+        self.surf = self.surf.convert_alpha()
+        self.surf.fill((0,0,0,0))
+
+        
+        for i in range(0, SCREEN_WIDTH + 180, 60):
+            smallrect = pygame.Surface((10 , 60))
+            smallrect.fill((84, 61, 70))
+            self.surf.blit(smallrect, (i - self.pos.x, 0))
+        railrect = pygame.Surface((SCREEN_WIDTH, 10))
+        railrect.fill((201, 185, 185))
+        self.surf.blit(railrect, (0, 0))
+        self.rect = self.surf.get_rect(topleft = (0, SCREEN_HEIGHT - 60))
+
     def move(self):
         self.acc = Vector2(0,0)
     
@@ -86,11 +101,31 @@ class Platform(pygame.sprite.Sprite):
         
         self.construct_grid()
     
- 
+
 pygame.init()
-FramePerSec = pygame.time.Clock()
+
 displaysurface = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Game")
+
+displaysurface.fill((0, 0, 0)) #transparent/black bg
+
+startfont = pygame.font.SysFont("comicsans", 15)
+starttext = startfont.render("Click anywhere on screen to start.", True, (255, 255, 255))
+displaysurface.blit(starttext, (SCREEN_WIDTH / 2 - 120, SCREEN_HEIGHT / 2))
+
+pygame.display.update()
+
+while True:
+    start_signal = False
+    for ev in pygame.event.get():
+        if ev.type == pygame.MOUSEBUTTONDOWN: 
+            start_signal = True
+            break
+        if ev.type == QUIT:
+            pygame.quit()
+            sys.exit()
+    if start_signal:
+        break
 
 PT1 = Platform(displaysurface.get_size()[0], 60, 60)
 P1 = Player()
@@ -100,22 +135,30 @@ all_sprites.add(PT1)
 all_sprites.add(P1)
  
 #displaysurface.fill((228, 217, 255))
-displaysurface.fill((0, 0, 0)) #transparent/black bg
 
+
+FramePerSec = pygame.time.Clock()
 x_pos = SCREEN_WIDTH/2 - 10
 
 mixer.music.load(MUSIC_NAME)
-mixer.music.play()
+mixer.music.play(-1)
 mixer.music.set_volume(GAMEVOL)
 
 car = pygame.image.load(CAR_IMAGE)
 car = pygame.transform.scale(car, (100, 100))
+#car_width = car.get_width()
+#car_height = car.get_height()
+#print ("car: ", car_width, car_height)
+
 bg = pygame.image.load(BG_FILE_NAME).convert()
 BG_WIDTH = bg.get_width()
 BG_HEIGHT = bg.get_height()
-bg_x = 0
-#bg = pygame.transform.scale(bg, (736 * 1.15, 345 * 1.15))
+#print("BG: ", BG_WIDTH, BG_HEIGHT)
 
+bg_x = 0
+
+score = 0
+font = pygame.font.SysFont("comicsans", 15)
 
 while True:
     for event in pygame.event.get():
@@ -140,8 +183,9 @@ while True:
  
     RATIO = x_pos / (SCREEN_WIDTH - 20)
 
-    ACC = RATIO * 0.2
-    
+    #ACC = RATIO * 0.2
+    ACC = RATIO * 0.3
+
     GAMEVOL = ACC * 4 + 0.2
     mixer.music.set_volume(GAMEVOL)
 
@@ -149,6 +193,12 @@ while True:
 
     #15 is arbitrary number to control bg scroll speed
     bg_x = bg_x + ACC * 15
+
+    #score based directly off acc
+    score = score + ACC
+    
+    txtsurf = font.render("Score: " + str(round(score, 1)), True, (255, 255, 255))
+
 
     croppedbg = pygame.Surface((SCREEN_WIDTH,BG_HEIGHT))
     if ((bg_x + SCREEN_WIDTH) > BG_WIDTH):
@@ -172,6 +222,10 @@ while True:
         displaysurface.blit(entity.surf, entity.rect)
     #displaysurface.blit(bg, (0,0) )
 
+    displaysurface.blit(txtsurf, (SCREEN_WIDTH - 110, 60))
+
     
     pygame.display.update()
     FramePerSec.tick(FPS)
+    
+    
