@@ -61,14 +61,14 @@ class Platform(pygame.sprite.Sprite):
         
         self.surf = pygame.Surface((SCREEN_WIDTH, 60))
         self.surf = self.surf.convert_alpha()
-        self.surf.fill((0,0,0,0))
+        self.surf.fill((0,0,0,0)) #transparent surface
 
         
-        for i in range(0, SCREEN_WIDTH + 180, 60):
-            smallrect = pygame.Surface((10 , 60))
-            smallrect.fill((84, 61, 70))
-            self.surf.blit(smallrect, (i - self.pos.x, 0))
-        railrect = pygame.Surface((SCREEN_WIDTH, 10))
+        for i in range(0, SCREEN_WIDTH + 180, 60): #180 is 3 extra trakcs so track loads on time, 60 is spacing between tracks
+            smallrect = pygame.Surface((10 , 60)) #each individual brown track 10 x 60
+            smallrect.fill((84, 61, 70)) 
+            self.surf.blit(smallrect, (i - self.pos.x, 0)) 
+        railrect = pygame.Surface((SCREEN_WIDTH, 10)) #rail of track
         railrect.fill((201, 185, 185))
         self.surf.blit(railrect, (0, 0))
         self.rect = self.surf.get_rect(topleft = (0, SCREEN_HEIGHT - 60))
@@ -115,7 +115,7 @@ displaysurface.blit(starttext, (SCREEN_WIDTH / 2 - 120, SCREEN_HEIGHT / 2))
 
 pygame.display.update()
 
-while True:
+while True: #start screen
     start_signal = False
     for ev in pygame.event.get():
         if ev.type == pygame.MOUSEBUTTONDOWN: 
@@ -141,7 +141,7 @@ FramePerSec = pygame.time.Clock()
 x_pos = SCREEN_WIDTH/2 - 10
 
 mixer.music.load(MUSIC_NAME)
-mixer.music.play(-1)
+mixer.music.play(-1) #repeats infintely
 mixer.music.set_volume(GAMEVOL)
 
 car = pygame.image.load(CAR_IMAGE)
@@ -224,7 +224,6 @@ while True:
 
     displaysurface.blit(txtsurf, (SCREEN_WIDTH - 110, 60))
 
-    
     pygame.display.update()
     FramePerSec.tick(FPS)
     
