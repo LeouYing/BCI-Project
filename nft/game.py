@@ -200,22 +200,22 @@ while True:
     txtsurf = font.render("Score: " + str(round(score, 1)), True, (255, 255, 255))
 
 
-    croppedbg = pygame.Surface((SCREEN_WIDTH,BG_HEIGHT))
     if ((bg_x + SCREEN_WIDTH) > BG_WIDTH):
         if (bg_x >= BG_WIDTH): #if it reaches the end of the image reset it to beginning
-            bg_x = 0
+            bg_x -= BG_WIDTH
+            croppedbg = pygame.Surface((SCREEN_WIDTH,BG_HEIGHT))
             croppedbg = bg.subsurface((bg_x, 0, SCREEN_WIDTH, BG_HEIGHT))
+            displaysurface.blit(croppedbg, (0, 50))
         else: #combining part of the end of the image and beginning
-            #bg_x = 0
-            crop1 = bg.subsurface((bg_x, 0, BG_WIDTH - bg_x, BG_HEIGHT))
-            crop2 = bg.subsurface((0, 0, SCREEN_WIDTH - (BG_WIDTH - bg_x), BG_HEIGHT))
-            croppedbg.blit(crop1, (0, 0))
-            croppedbg.blit(crop2, (BG_WIDTH - bg_x, 0))
+            croppedbg1 = pygame.Surface((SCREEN_WIDTH,BG_HEIGHT))
+            croppedbg1 = bg.subsurface((bg_x, 0, BG_WIDTH - bg_x, BG_HEIGHT))			
+            croppedbg2 = pygame.Surface((SCREEN_WIDTH,BG_HEIGHT))
+            croppedbg2 = bg.subsurface((0, 0, SCREEN_WIDTH - (BG_WIDTH - bg_x), BG_HEIGHT))			
+            displaysurface.blit(croppedbg1, (0, 50))
+            displaysurface.blit(croppedbg2, (BG_WIDTH - bg_x, 50))
     else:
         croppedbg = bg.subsurface((bg_x, 0, SCREEN_WIDTH, BG_HEIGHT))
-    #croppedbg = bg.subsurface((bg_x, 0, WIDTH, BG_HEIGHT))
-    #displaysurface.blit(bg, (0,50) )
-    displaysurface.blit(croppedbg, (0, 50))
+        displaysurface.blit(croppedbg, (0, 50))
 
     displaysurface.blit(car, (SCREEN_WIDTH/2 - 50, SCREEN_HEIGHT - 135))
     for entity in all_sprites:
