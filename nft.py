@@ -76,7 +76,7 @@ def sender(connection):
         Extract a chunk + its timestamps
         from the LSL inlet
         '''
-        chunk, timestamps = inlet.pull_chunk()
+        chunk, timestamps = inlet.pull_chunk() #TODO: this is blocking
 
         '''
         Chunk currently looks like this:
@@ -102,9 +102,10 @@ def sender(connection):
         Here, we use N = 8 for 8 channels
         '''
 
+        print("A")
         # If we get a valid chunk, extend our data
         if timestamps and chunk:
-            data.extend(chunk)
+            data.extend(chunk) #TODO np.append to it to run faster
             timestamps_data.extend(timestamps)
 
         '''
@@ -361,6 +362,13 @@ def receiver(connection):
 if __name__ == '__main__':
     # create the pipe
     conn1, conn2 = Pipe()
+    
+    # this will open a separate process in a shell --> helpful for debuggin 
+    # --> plz do this for me cute bb gurl, or, at least, ellucidate your paradigm in your data pipeline more clearly
+    # (it'll need to be placed in a separate module)
+    # vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+    # subprocess.Popen('start /wait python python_script.py', shell=True);
+    
     # start the sender
     sender_process = Process(target=sender, args=(conn2,))
     sender_process.start()
