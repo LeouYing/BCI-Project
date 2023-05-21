@@ -4,6 +4,9 @@ import datetime
 import numpy as np
 from pylsl import StreamInlet, resolve_stream
 from scipy.fft import fft, fftfreq
+
+# Seconds
+MEASUREMENT_TIME = 120
  
 # generate work
 def sender():
@@ -203,7 +206,7 @@ def sender():
             file.write(f'{theta_power},')
 
         now_time = time()
-        if now_time - start_time >= 5:
+        if now_time - start_time >= MEASUREMENT_TIME:
             break
 
     # Now we can calculate the average theta
